@@ -1,0 +1,101 @@
+bl_info = {
+    "name": "Addon-exportarImportar",
+    "description": "este Addon exporta e importa ojetos",
+    "author": "Manuel Santos",
+    "version": (1, 0),
+    "blender": (3, 4, 0),
+    "location": "View3D > Tool",
+    "warning": "",
+    "wiki_url": "",
+    "tracker_url": "",
+    "category": "Export and import Mesh"
+}
+
+import bpy
+
+
+class MyExportOperator(bpy.types.Operator):
+    
+    bl_idname = "object.export_fbx"    
+    bl_label = "Exportar FBX"
+    
+    def execute(self, context):
+        
+        # Define la ruta y el nombre del archivo de salida
+        output_path = "C:/Users/manus/Desktop/proyectos/clase/practicas/programacion/mi_objeto.fbx"
+        
+        # Selecciona el objeto a exportar
+        obj = bpy.context.active_object
+        
+        # Configura las opciones de exportación
+        fbx_options = {
+            'filepath': output_path,
+            'object_types': {'MESH'},
+            'use_mesh_modifiers': True,
+            'mesh_smooth_type': 'FACE',
+            'use_subsurf': False,
+            'use_custom_props': False,
+            'apply_scale_options': 'FBX_SCALE_ALL',
+            'use_mesh_edges': False,
+            'use_tspace': False,
+            'add_leaf_bones': False,
+            'primary_bone_axis': 'Y',
+            'secondary_bone_axis': 'X',
+            'use_armature_deform_only': False,
+            'armature_nodetype': 'NULL',
+            'batch_mode': 'OFF',
+            'use_batch_own_dir': True,
+            'use_metadata': True,
+            'axis_forward': '-Z',
+            'axis_up': 'Y'
+        }
+        
+        # Exporta el objeto en formato FBX
+        bpy.ops.export_scene.fbx(**fbx_options)
+
+        return {'FINISHED'}
+
+class MyImportOperator(bpy.types.Operator):
+    
+    bl_idname = "object.import_fbx"    
+    bl_label = "Importar FBX"
+    
+    def execute(self, context):
+        
+        # Define la ruta y el nombre del archivo de entrada
+        input_path = "C:/Users/manus/Desktop/proyectos/clase/practicas/programacion/mi_objeto.fbx"
+        
+        # Importa el objeto en formato FBX
+        bpy.ops.import_scene.fbx(filepath=input_path)
+
+        return {'FINISHED'}
+
+class MyPanel(bpy.types.Panel):
+    
+    bl_idname = "VIEW_3D_PT_TestPanel"
+    bl_label = "Mi panel"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    
+    def draw(self, context):
+        layout = self.layout
+        
+        row = layout.row()
+        row.operator("object.export_fbx", text="Export")
+        
+        row = layout.row()
+        row.operator("object.import_fbx", text="Import")
+
+
+def register():
+    bpy.utils.register_class(MyExportOperator)
+    bpy.utils.register_class(MyImportOperator)
+    bpy.utils.register_class(MyPanel)
+    
+def unregister():
+    bpy.utils.unregister_class(MyExportOperator)
+    bpy.utils.unregister_class(MyImportOperator)
+    bpy.utils.unregister_class(MyPanel)
+    
+if __name__ == "__main__":
+    register()
