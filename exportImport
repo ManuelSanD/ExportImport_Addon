@@ -1,3 +1,5 @@
+import bpy
+
 bl_info = {
     "name": "Addon-exportarImportar",
     "description": "este Addon exporta e importa ojetos",
@@ -10,8 +12,6 @@ bl_info = {
     "tracker_url": "",
     "category": "Export and import Mesh"
 }
-
-import bpy
 
 
 class MyExportOperator(bpy.types.Operator):
@@ -52,21 +52,9 @@ class MyExportOperator(bpy.types.Operator):
         
         # Exporta el objeto en formato FBX
         bpy.ops.export_scene.fbx(**fbx_options)
-
-        return {'FINISHED'}
-
-class MyImportOperator(bpy.types.Operator):
-    
-    bl_idname = "object.import_fbx"    
-    bl_label = "Importar FBX"
-    
-    def execute(self, context):
-        
-        # Define la ruta y el nombre del archivo de entrada
-        input_path = "C:/Users/manus/Desktop/proyectos/clase/practicas/programacion/mi_objeto.fbx"
         
         # Importa el objeto en formato FBX
-        bpy.ops.import_scene.fbx(filepath=input_path)
+        bpy.ops.import_scene.fbx(filepath=output_path)
 
         return {'FINISHED'}
 
@@ -82,19 +70,13 @@ class MyPanel(bpy.types.Panel):
         
         row = layout.row()
         row.operator("object.export_fbx", text="Export")
-        
-        row = layout.row()
-        row.operator("object.import_fbx", text="Import")
-
 
 def register():
     bpy.utils.register_class(MyExportOperator)
-    bpy.utils.register_class(MyImportOperator)
     bpy.utils.register_class(MyPanel)
     
 def unregister():
     bpy.utils.unregister_class(MyExportOperator)
-    bpy.utils.unregister_class(MyImportOperator)
     bpy.utils.unregister_class(MyPanel)
     
 if __name__ == "__main__":
