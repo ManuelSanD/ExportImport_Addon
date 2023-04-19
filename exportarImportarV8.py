@@ -52,9 +52,16 @@ class MyExportOperator(bpy.types.Operator):
         
         filepath = os.path.join(context.scene.layama_tool.exportPath, obj.name + ".fbx")
         bpy.ops.export_scene.fbx(filepath=filepath, **fbx_options)
+        
+        #Put the name of original object in the var
+        object_name = bpy.context.active_object.name
+        
+        bpy.data.objects.remove(bpy.context.active_object)
 
         # Importa el objeto en formato FBX
         bpy.ops.import_scene.fbx(filepath=filepath)
+        
+        bpy.context.selected_objects[0].name = original_name
 
         return {'FINISHED'}
 
@@ -76,7 +83,26 @@ class EIProperties(PropertyGroup):
         maxlen=1024,
         subtype='DIR_PATH'
     )
+    
 
+
+class SelectedObjectOperator(bpy.types.Operator):
+    bl_idname = "object.mod_obj"
+    bl_label = "Save Selected Object"
+    
+    def execute(self, context):
+        selected_object = context.active_object
+        return {'FINISHED'}
+
+
+class CopyMaterials:
+    def execute(self, context):
+        dest_obj =  bpy.context.active_object
+
+        dest_obj.data.materials.clear()
+        for mMaterial in mod_obj.data.materials:
+            dest_obj.data.materials.append(mMaterial)
+            
 
 class MyPanel(bpy.types.Panel):
     
@@ -119,4 +145,3 @@ def unregister():
     
 if __name__ == "__main__":
     register()
-corrigelo
