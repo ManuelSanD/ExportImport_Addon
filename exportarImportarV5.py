@@ -24,13 +24,10 @@ class MyExportOperator(bpy.types.Operator):
     
     def execute(self, context):
         
-        # Define la ruta y el nombre del archivo de salida
-        #output_path = "C:/Users/manus/Desktop/proyectos/clase/practicas/programacion/mi_objeto.fbx"
-        
         # Selecciona el objeto a exportar
         obj = bpy.context.active_object
         
-        # Configura las opciones de exportación
+        # export options configuration
         fbx_options = {
             #'filepath': output_path,
             'object_types': {'MESH'},
